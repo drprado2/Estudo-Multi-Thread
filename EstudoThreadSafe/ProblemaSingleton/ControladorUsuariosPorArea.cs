@@ -20,8 +20,12 @@ namespace EstudoThreadSafe.ProblemaSingleton
         private int _numeroMaximoUsuariosPermitidos;
         private IList<string> _usuariosNaArea;
 
-        // Como sabemos do problema do controle de estado já criamos a variável para sincronizar o método que atualiza 
+        // Como sabemos do problema do controle de estado já criamos a variável para sincronizar o método que atualiza o estado
         private Object _bloquearInstancia = new Object();
+
+        // Aqui é parte da solução, devemos ter uma maneira de bloquear a primeira criação do singleton tmb, pois devemos saber que
+        // a criação inicial pode ocorrer em paralelo, e teremos o mesmo problema do estado.
+        // Nesse caso a variável de bloqueio deve ser estático pela maneira como o singleton é implementado.
         private static Object _bloqueioSingleton = new Object();
 
         private ControladorUsuariosPorArea()
@@ -33,11 +37,21 @@ namespace EstudoThreadSafe.ProblemaSingleton
 
         public static ControladorUsuariosPorArea ObterInstancia()
         {
+            // Aqui vem o segundo segredo da implementação, o Singleton tem o benefício de carregamento preguiçoso,
+            // ou seja diferente das variáveis globais o singleton só cria a instancia quando é solicitado a primeira vez
+            // só que em aplicações multi thread a solicitação da instancia inicial pode ocorrer em paralelo.
+            // Então sem blocar o código verificamos se a instancia ainda está nula. Depois da 1 criação nunca vai entrar
+            // nesse IF, mas sabemos que a primeira criação pode estar ocorrendo em paralelo.
             if (_instanciaUnica == null)
             {
+                // Após entrar no if ai sim bloqueamos o objeto, para garantir a concorrência nesse trecho do código, ao invéz do paralelismo
+
+                // ATENÇÃO!! RETIRE OS COMENTÁRIOS DA LINHA ABAIXO PARA VER O PROBLEMA SER RESOLVIDO
                 lock (_bloqueioSingleton)
                 {
-                    if(_instanciaUnica == null)
+                    // Aqui fazemos a mesma verificação de novo, ai mesmo que passamos do primeiro if no caso da criação inicial paralela
+                    // não passaremos desse segundo, e não geraremos o problema
+                    if (_instanciaUnica == null)
                         _instanciaUnica = new ControladorUsuariosPorArea();
                 }
             }
