@@ -47,13 +47,13 @@ namespace EstudoThreadSafe.ProblemaSingleton
                 // Após entrar no if ai sim bloqueamos o objeto, para garantir a concorrência nesse trecho do código, ao invéz do paralelismo
 
                 // ATENÇÃO!! RETIRE OS COMENTÁRIOS DA LINHA ABAIXO PARA VER O PROBLEMA SER RESOLVIDO
-                lock (_bloqueioSingleton)
-                {
+                //lock (_bloqueioSingleton)
+                //{
                     // Aqui fazemos a mesma verificação de novo, ai mesmo que passamos do primeiro if no caso da criação inicial paralela
                     // não passaremos desse segundo, e não geraremos o problema
                     if (_instanciaUnica == null)
                         _instanciaUnica = new ControladorUsuariosPorArea();
-                }
+                //}
             }
 
             return _instanciaUnica;

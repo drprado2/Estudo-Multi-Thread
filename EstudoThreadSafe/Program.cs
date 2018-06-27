@@ -11,6 +11,7 @@ namespace EstudoThreadSafe
             Console.WriteLine("==============================================");
             Console.WriteLine("1 - Exemplo compartilhamento de estado");
             Console.WriteLine("2 - Exemplo problema com singleton");
+            Console.WriteLine("3 - Problema entidade de registro único");
 
             var escolha = Console.ReadKey();
             Console.WriteLine("\n\n");
@@ -28,6 +29,13 @@ namespace EstudoThreadSafe
                 case (2):
                 {
                     var exemplo = new ProblemaSingleton.Exemplo();
+                    exemplo.Executar();
+                    Console.WriteLine("\n******* FIM DO EXEMPLO *******");
+                    break;
+                }
+                case (3):
+                {
+                    var exemplo = new ProblemaBancoDados.Exemplo();
                     exemplo.Executar();
                     Console.WriteLine("\n******* FIM DO EXEMPLO *******");
                     break;
